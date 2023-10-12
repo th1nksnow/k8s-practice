@@ -1,0 +1,58 @@
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment-v3
+  labels:
+    app: my-k8s-deploy
+    env: prod
+    owner: th1nksnow
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      project: v3
+  template:
+    metadata:
+      labels:
+        project: v3
+    spec:
+      containers:
+        - name: php-container
+          image: th1nksnow/k8sphp:latest
+          ports:
+            - containerPort: 80
+
+---
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: web-autoscaling
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: web-deployment-v3
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+
+...
+
