@@ -1,0 +1,48 @@
+
+---
+
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment-single
+  labels:
+    app : k8s-deploy-single
+
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: v1
+  template:
+    metadata:
+      labels:
+        project: v1
+    spec:
+      containers:
+        - name : php-container
+          image: th1nksnow/k8sphp:latest
+          ports:
+            - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: single-pod-svc
+  labels:
+    env  : prod
+    owner: th1nksnow
+
+spec:
+  selector:
+    project: 
+  ports:
+    - name      : app-listener
+      protocol  : TCP
+      port      : 80            # Port on Load Balancer
+      targetPort: 80            # Port on POD
+  type: LoadBalancer
+
+...
+

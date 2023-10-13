@@ -1,0 +1,58 @@
+
+---
+
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment-multi
+  labels:
+    app : k8s-deployment-multi
+
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: v1
+  template:
+    metadata:
+      labels:
+        project: v1
+    spec:
+      containers:
+        - name : php-container
+          image: th1nksnow/k8sphp:latest
+          ports:
+            - containerPort: 80
+
+        - name : tomcat-container
+          image: tomcat:8.5.38
+          ports:
+            - containerPort: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: multi-pods-svc
+  labels:
+     env  : prod
+     owner: th1nksnow
+
+spec:
+  type: LoadBalancer
+  selector:
+    project: v1
+  ports:
+    - name      : php-listener
+      protocol  : TCP
+      port      : 80
+      targetPort: 80
+
+    - name      : tomcat-listener
+      protocol  : TCP
+      port      : 8888
+      targetPort: 8080
+
+...
+
