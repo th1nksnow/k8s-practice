@@ -1,0 +1,29 @@
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment-{{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}-k8s-deploy
+    env: prod
+    owner: th1nksnow
+
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      project: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        project: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-container
+          image: {{ .Values.container.image }}
+          ports:
+            - containerPort: 80
+
+...

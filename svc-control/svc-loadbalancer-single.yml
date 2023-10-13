@@ -36,7 +36,7 @@ metadata:
 
 spec:
   selector:
-    project: 
+    project: v1
   ports:
     - name      : app-listener
       protocol  : TCP
@@ -45,4 +45,3 @@ spec:
   type: LoadBalancer
 
 ...
-

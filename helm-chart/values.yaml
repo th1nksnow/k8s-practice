@@ -1,0 +1,6 @@
+# Default Values
+
+container:
+  image: th1nksnow/k8sphp:latest
+
+replicaCount: 2
